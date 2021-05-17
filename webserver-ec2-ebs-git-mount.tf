@@ -72,6 +72,7 @@ resource "aws_volume_attachment" "ec2_ebs_attachment" {
 	device_name = "/dev/xvdc"
 	volume_id = aws_ebs_volume.ebs_creation.id
 	instance_id = aws_instance.ec2_instance.id
+	force_detach=True
 }
 output "ec2_ebs_attachment_output" {
 	value = aws_volume_attachment.ec2_ebs_attachment
@@ -102,9 +103,13 @@ connection {
 
 provisioner "remote-exec" {
     inline = [
-      "sudo wget  https://raw.githubusercontent.com/shubhambhardwaj007/Terraform-Practice-Repository/master/test_webpage.html -P /var/www/html/"
+      "sudo wget  https://raw.githubusercontent.com/shubhambhardwaj007/Terraform-Practice-Repository/master/test_webpage.html -P /var/www/html/",
+      "sudo systemctl restart httpd"
     ]
   }
 
+}
+output "ec2_ipaddress" {
+        value =  aws_instance.ec2_instance.public_ip
 }
 
